@@ -19,9 +19,9 @@
         android:id="@+id/txv_auth"
         android:layout_width="300dp"
         android:layout_height="60dp"
-        android:text="Auth Firebase"
-        android:textSize="48sp"
         android:layout_marginTop="90dp"
+        android:text="Home"
+        android:textSize="48sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
