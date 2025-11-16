@@ -1,7 +1,7 @@
 # Plano de Desenvolvimento - Desafio de Agendamento de Consultas
 
 ## 1. Objetivo
-Adaptar o aplicativo base fornecido para criar um Sistema de Gerenciamento de Agendamento de Consultas, utilizando Firebase Auth para autenticação e Firebase Firestore para armazenamento de dados, conforme as Regras de Negócio (RN) e Requisitos Funcionais (RF) do `DESAFIO-A.pdf`.
+ criar um Sistema de Gerenciamento de Agendamento de Consultas, utilizando Firebase Auth para autenticação e Firebase Firestore para armazenamento de dados, conforme as Regras de Negócio (RN) e Requisitos Funcionais (RF) do `DESAFIO-A.pdf` da Facudade Universidade Santa Cecília materia DESENVOLVIMENTO PARA DISPOSITIVOS MÓVEIS.
 
 ## 2. Modelo de Dados Firestore (RF05)
 
