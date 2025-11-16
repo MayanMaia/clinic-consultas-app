@@ -1,4 +1,4 @@
-package br.unisanta.appfirebase
+package br.unisanta.appfirebase.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,15 +10,11 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-
+import br.unisanta.appfirebase.R
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
-    private lateinit var firestore: FirebaseFirestore
 
     // Cria o "Lançador" da FirebaseUI
     private val signInLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
@@ -33,12 +29,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
-        firestore = Firebase.firestore
 
         // 1. Verificar se o usuário JÁ ESTÁ LOGADO
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            checkUserProfileAndRedirect(currentUser.uid)
+        if (auth.currentUser != null) {
+            goToUserHome()
             return
         }
 
@@ -99,37 +93,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Função para navegar para a tela logada (substituída pela lógica de verificação de perfil)
+    // Função para navegar para a tela logada
     private fun goToUserHome() {
-        // Esta função não será mais usada diretamente, mas a mantemos para compatibilidade temporária
-        // com a função onSignInResult, que será corrigida em seguida.
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser != null) {
-            checkUserProfileAndRedirect(currentUser.uid)
-        }
-    }
-
-    private fun checkUserProfileAndRedirect(uid: String) {
-        firestore.collection("users").document(uid).get()
-            .addOnSuccessListener { document ->
-                val profile = document.getString("profile")
-                val intent: Intent
-                when (profile) {
-                    "Paciente" -> intent = Intent(this, PatientHomeActivity::class.java)
-                    "Médico" -> intent = Intent(this, DoctorHomeActivity::class.java)
-                    else -> {
-                        // Perfil não encontrado ou inválido, desloga por segurança
-                        auth.signOut()
-                        Toast.makeText(this, "Perfil de usuário inválido. Faça login novamente.", Toast.LENGTH_LONG).show()
-                        return@addOnSuccessListener
-                    }
-                }
-                startActivity(intent)
-                finish()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Erro ao verificar perfil. Tente novamente.", Toast.LENGTH_LONG).show()
-                auth.signOut()
-            }
+        val intent = Intent(this, UserHomeActivity::class.java)
+        startActivity(intent)
+        finish() // Fecha a MainActivity
     }
 }

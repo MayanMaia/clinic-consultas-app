@@ -7,5 +7,9 @@ data class User(
     val uid: String = "",
     val email: String = "",
     val name: String = "",
-    val profile: String = "Paciente" // "Paciente" ou "Médico"
-)
+    // RN02: Campo para identificar o perfil do usuário
+    val profile: String = "Paciente" // Pode ser "Paciente" ou "Médico"
+) {
+    // Construtor vazio necessário para o Firestore
+    constructor() : this("", "", "", "Paciente")
+}

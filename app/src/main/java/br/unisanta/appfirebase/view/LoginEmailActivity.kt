@@ -1,4 +1,4 @@
-package br.unisanta.appfirebase
+package br.unisanta.appfirebase.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,21 +9,19 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import br.unisanta.appfirebase.databinding.ActivityLoginEmailBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import br.unisanta.appfirebase.controller.AuthController
+import br.unisanta.appfirebase.view.UserHomeActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import androidx.activity.result.ActivityResultLauncher
 import java.util.Arrays
 import android.util.Log
-
+import br.unisanta.appfirebase.R
 
 class LoginEmailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginEmailBinding
-    private lateinit var auth: FirebaseAuth
-    private lateinit var firestore: FirebaseFirestore
+    private lateinit var authController: AuthController
 
     // Contrato para lidar com o resultado do login do FirebaseUI
     private val signInLauncher: ActivityResultLauncher<Intent> =
@@ -42,23 +40,23 @@ class LoginEmailActivity : AppCompatActivity() {
             insets
         }
 
-        auth = FirebaseAuth.getInstance()
-        firestore = Firebase.firestore
+        authController = AuthController()
 
         binding.btnLoginEmail.setOnClickListener {
             val email = binding.edtEmailLogin.text.toString()
             val senha = binding.edtSenhaLogin.text.toString()
-            auth.signInWithEmailAndPassword(email, senha)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful){
-                        Toast.makeText(this, "Login com Sucesso!", Toast.LENGTH_SHORT).show()
-                        // Verifica o perfil e redireciona
-                        auth.currentUser?.uid?.let { checkUserProfileAndRedirect(it) }
-                    }
-                    else{
-                        Toast.makeText(this, "Login Inválido: ${task.exception?.message}!", Toast.LENGTH_LONG).show()
-                    }
+            authController.signIn(email, senha,
+                onSuccess = {
+                    Toast.makeText(this, "Login com Sucesso!", Toast.LENGTH_SHORT).show()
+                    // Redirecionar para a tela inicial do usuário
+                    val intent = Intent(this, UserHomeActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                },
+                onFailure = { exception ->
+                    Toast.makeText(this, "Login Inválido: ${exception.message}!", Toast.LENGTH_LONG).show()
                 }
+            )
         }
 
         // 1. Configurar o botão de login com Google
@@ -92,9 +90,10 @@ class LoginEmailActivity : AppCompatActivity() {
             // Login bem-sucedido
             val user = FirebaseAuth.getInstance().currentUser
             Toast.makeText(this, "Login com Google bem-sucedido! Usuário: ${user?.displayName}", Toast.LENGTH_SHORT).show()
-            // Verifica o perfil e redireciona
-            val user = FirebaseAuth.getInstance().currentUser
-            user?.uid?.let { checkUserProfileAndRedirect(it) }
+            // Redirecionar para a tela inicial do usuário
+            val intent = Intent(this, UserHomeActivity::class.java)
+            startActivity(intent)
+            finish()
         } else {
             // Login falhou
             if (response == null) {
@@ -110,29 +109,5 @@ class LoginEmailActivity : AppCompatActivity() {
             Log.e("LoginEmailActivity", "Erro de login: ${response.error?.errorCode}", response.error)
             Toast.makeText(this, "Erro de login: ${response.error?.message}", Toast.LENGTH_LONG).show()
         }
-    }
-
-    private fun checkUserProfileAndRedirect(uid: String) {
-        firestore.collection("users").document(uid).get()
-            .addOnSuccessListener { document ->
-                val profile = document.getString("profile")
-                val intent: Intent
-                when (profile) {
-                    "Paciente" -> intent = Intent(this, PatientHomeActivity::class.java)
-                    "Médico" -> intent = Intent(this, DoctorHomeActivity::class.java)
-                    else -> {
-                        // Perfil não encontrado ou inválido, desloga por segurança
-                        auth.signOut()
-                        Toast.makeText(this, "Perfil de usuário inválido. Faça login novamente.", Toast.LENGTH_LONG).show()
-                        return@addOnSuccessListener
-                    }
-                }
-                startActivity(intent)
-                finish()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Erro ao verificar perfil. Tente novamente.", Toast.LENGTH_LONG).show()
-                auth.signOut()
-            }
     }
 }

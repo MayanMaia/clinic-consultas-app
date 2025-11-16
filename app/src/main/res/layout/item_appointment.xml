@@ -8,44 +8,34 @@
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/txv_patient_name"
-            android:layout_width="0dp"
+            android:id="@+id/tv_patient_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:text="Paciente: João da Silva" />
 
         <TextView
-            android:id="@+id/txv_appointment_date"
-            android:layout_width="0dp"
+            android:id="@+id/tv_appointment_details"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txv_patient_name"
-            tools:text="Data: 15/11/2025 às 14:30" />
+            tools:text="Data: 25/12/2025 - Horário: 10:00" />
 
         <TextView
-            android:id="@+id/txv_appointment_status"
-            android:layout_width="0dp"
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="14sp"
-            android:textColor="@android:color/holo_green_dark"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txv_appointment_date"
+            android:textColor="@color/design_default_color_primary"
             tools:text="Status: Agendada" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </androidx.cardview.widget.CardView>
