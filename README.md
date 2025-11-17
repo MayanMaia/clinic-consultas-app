@@ -53,3 +53,4 @@ O código base em Kotlin/Android já possui a estrutura de autenticação. As mo
 3.  Implementar as modificações na `RegisterActivity` para salvar o perfil.
 4.  Implementar a lógica de redirecionamento baseada no perfil.
 5.  Desenvolver as telas de agendamento e visualização.
+6. :construction: Login com o Google e o médicos apenas visualizam o cadastro
